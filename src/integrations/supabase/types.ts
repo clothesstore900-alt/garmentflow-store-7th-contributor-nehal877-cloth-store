@@ -61,6 +61,7 @@ export type Database = {
       }
       invoice_items: {
         Row: {
+          color_name: string | null
           created_at: string | null
           id: string
           invoice_id: string
@@ -72,17 +73,19 @@ export type Database = {
           unit_price: number
         }
         Insert: {
+          color_name?: string | null
           created_at?: string | null
           id?: string
           invoice_id: string
           product_id?: string | null
           product_name: string
-          quantity: number
+          quantity?: number
           size_name?: string | null
-          total_price: number
-          unit_price: number
+          total_price?: number
+          unit_price?: number
         }
         Update: {
+          color_name?: string | null
           created_at?: string | null
           id?: string
           invoice_id?: string
@@ -118,9 +121,11 @@ export type Database = {
           customer_phone: string | null
           discount_amount: number | null
           discount_type: string | null
+          expected_payment_date: string | null
           grand_total: number
           id: string
           invoice_number: string
+          payment_status: string | null
           pdf_url: string | null
           subtotal: number
           tax_amount: number | null
@@ -133,11 +138,13 @@ export type Database = {
           customer_phone?: string | null
           discount_amount?: number | null
           discount_type?: string | null
-          grand_total: number
+          expected_payment_date?: string | null
+          grand_total?: number
           id?: string
-          invoice_number: string
+          invoice_number?: string
+          payment_status?: string | null
           pdf_url?: string | null
-          subtotal: number
+          subtotal?: number
           tax_amount?: number | null
           tax_percentage?: number | null
         }
@@ -148,9 +155,11 @@ export type Database = {
           customer_phone?: string | null
           discount_amount?: number | null
           discount_type?: string | null
+          expected_payment_date?: string | null
           grand_total?: number
           id?: string
           invoice_number?: string
+          payment_status?: string | null
           pdf_url?: string | null
           subtotal?: number
           tax_amount?: number | null
@@ -339,11 +348,19 @@ export type Database = {
           currency_symbol: string | null
           email: string | null
           id: string
+          instagram_page: string | null
+          instagram_page_id: string | null
+          instagram_qr_url: string | null
+          instagram_tagline: string | null
           logo_url: string | null
           phone: string | null
           store_name: string
           tax_percentage: number | null
           updated_at: string | null
+          whatsapp_channel: string | null
+          whatsapp_channel_name: string | null
+          whatsapp_qr_url: string | null
+          whatsapp_tagline: string | null
         }
         Insert: {
           address?: string | null
@@ -351,11 +368,19 @@ export type Database = {
           currency_symbol?: string | null
           email?: string | null
           id?: string
+          instagram_page?: string | null
+          instagram_page_id?: string | null
+          instagram_qr_url?: string | null
+          instagram_tagline?: string | null
           logo_url?: string | null
           phone?: string | null
           store_name?: string
           tax_percentage?: number | null
           updated_at?: string | null
+          whatsapp_channel?: string | null
+          whatsapp_channel_name?: string | null
+          whatsapp_qr_url?: string | null
+          whatsapp_tagline?: string | null
         }
         Update: {
           address?: string | null
@@ -363,11 +388,19 @@ export type Database = {
           currency_symbol?: string | null
           email?: string | null
           id?: string
+          instagram_page?: string | null
+          instagram_page_id?: string | null
+          instagram_qr_url?: string | null
+          instagram_tagline?: string | null
           logo_url?: string | null
           phone?: string | null
           store_name?: string
           tax_percentage?: number | null
           updated_at?: string | null
+          whatsapp_channel?: string | null
+          whatsapp_channel_name?: string | null
+          whatsapp_qr_url?: string | null
+          whatsapp_tagline?: string | null
         }
         Relationships: []
       }
