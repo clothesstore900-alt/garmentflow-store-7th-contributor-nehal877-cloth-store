@@ -199,13 +199,14 @@ export default function Invoices() {
       pdf.text("Grand Total:", pageWidth - 70, yPos);
       pdf.text(invoice.grand_total.toString(), pageWidth - 25, yPos, { align: "right" });
 
-      // Add QR codes at the bottom if uploaded
+      // Add QR codes and social media info at the bottom
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const bottomY = pageHeight - 50;
+      const bottomY = pageHeight - 55;
 
       if (storeSettings?.whatsapp_qr_url || storeSettings?.instagram_qr_url) {
-        let qrX = 20;
+        let qrX = 15;
 
+        // WhatsApp Section
         if (storeSettings?.whatsapp_qr_url) {
           try {
             const img = new Image();
@@ -214,16 +215,34 @@ export default function Invoices() {
               img.onload = resolve;
               img.onerror = resolve;
             });
-            pdf.addImage(img, 'PNG', qrX, bottomY, 30, 30);
-            pdf.setFontSize(8);
+            pdf.addImage(img, 'PNG', qrX, bottomY, 25, 25);
+
+            // WhatsApp icon (green circle with W)
+            pdf.setFillColor(37, 211, 102);
+            pdf.circle(qrX + 12.5, bottomY + 30, 3, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(6);
             pdf.setFont(undefined, 'bold');
-            pdf.text(storeSettings.whatsapp_tagline || 'Join our WhatsApp', qrX + 15, bottomY + 35, { align: 'center' });
+            pdf.text('W', qrX + 11.5, bottomY + 31.5);
+
+            // Tagline and channel name
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(7);
+            pdf.setFont(undefined, 'bold');
+            pdf.text(storeSettings.whatsapp_tagline || 'Join our WhatsApp', qrX + 12.5, bottomY + 36, { align: 'center' });
+            if (storeSettings.whatsapp_channel_name) {
+              pdf.setFontSize(6);
+              pdf.setFont(undefined, 'normal');
+              pdf.text(storeSettings.whatsapp_channel_name, qrX + 12.5, bottomY + 40, { align: 'center' });
+            }
+
             qrX += 60;
           } catch (err) {
             console.error('WhatsApp QR load failed:', err);
           }
         }
 
+        // Instagram Section
         if (storeSettings?.instagram_qr_url) {
           try {
             const img = new Image();
@@ -232,10 +251,30 @@ export default function Invoices() {
               img.onload = resolve;
               img.onerror = resolve;
             });
-            pdf.addImage(img, 'PNG', qrX, bottomY, 30, 30);
-            pdf.setFontSize(8);
+            pdf.addImage(img, 'PNG', qrX, bottomY, 25, 25);
+
+            // Instagram icon (gradient circle with camera)
+            const gradient = pdf.linearGradient({
+              vector: [qrX + 9, bottomY + 27, qrX + 16, bottomY + 33],
+              colors: [[245, 96, 64], [193, 53, 132]]
+            });
+            pdf.setFillColor(193, 53, 132);
+            pdf.circle(qrX + 12.5, bottomY + 30, 3, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(6);
             pdf.setFont(undefined, 'bold');
-            pdf.text(storeSettings.instagram_tagline || 'Follow us on Instagram', qrX + 15, bottomY + 35, { align: 'center' });
+            pdf.text('IG', qrX + 11, bottomY + 31.5);
+
+            // Tagline and page ID
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(7);
+            pdf.setFont(undefined, 'bold');
+            pdf.text(storeSettings.instagram_tagline || 'Follow us on Instagram', qrX + 12.5, bottomY + 36, { align: 'center' });
+            if (storeSettings.instagram_page_id) {
+              pdf.setFontSize(6);
+              pdf.setFont(undefined, 'normal');
+              pdf.text(`@${storeSettings.instagram_page_id}`, qrX + 12.5, bottomY + 40, { align: 'center' });
+            }
           } catch (err) {
             console.error('Instagram QR load failed:', err);
           }
@@ -336,6 +375,15 @@ export default function Invoices() {
       toast.success("Sale cancelled and stock restored");
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["sales-today"] });
+      queryClient.invalidateQueries({ queryKey: ["sales-month"] });
+      queryClient.invalidateQueries({ queryKey: ["sales-year"] });
+      queryClient.invalidateQueries({ queryKey: ["trending-today"] });
+      queryClient.invalidateQueries({ queryKey: ["trending-month"] });
+      queryClient.invalidateQueries({ queryKey: ["trending-year"] });
+      queryClient.invalidateQueries({ queryKey: ["profit-today"] });
+      queryClient.invalidateQueries({ queryKey: ["profit-month"] });
+      queryClient.invalidateQueries({ queryKey: ["profit-year"] });
       setCancelSaleId(null);
     },
     onError: (error) => {

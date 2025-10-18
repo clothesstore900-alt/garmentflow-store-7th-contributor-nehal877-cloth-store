@@ -21,7 +21,8 @@ export default function Profits() {
   const getProfitData = async (startDate: Date, endDate: Date) => {
     const { data, error } = await supabase
       .from("invoice_items")
-      .select("product_id, product_name, quantity, total_price, unit_price, products!inner(cost_inr), invoices!inner(created_at)")
+      .select("product_id, product_name, quantity, total_price, unit_price, products!inner(cost_inr), invoices!inner(created_at, payment_status)")
+      .eq("invoices.payment_status", "done")
       .gte("invoices.created_at", startDate.toISOString())
       .lte("invoices.created_at", endDate.toISOString());
 
